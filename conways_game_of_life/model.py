@@ -19,11 +19,13 @@ class ConwaysGameOfLife(mesa.Model):
 
         # Place a cell at each location, with some initialized to
         # ALIVE and some to DEAD.
+        unique_id = 0
         for contents, (x, y) in self.grid.coord_iter():
-            cell = Cell((x, y), self)
+            cell = Cell(unique_id, (x, y), self)
             if self.random.random() < 0.1:
                 cell.state = cell.ALIVE
             self.grid.place_agent(cell, (x, y))
+            unique_id += 1
 
         self.running = True
 
