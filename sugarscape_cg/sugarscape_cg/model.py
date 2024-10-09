@@ -41,25 +41,30 @@ class SugarscapeCg(mesa.Model):
         self.datacollector = mesa.DataCollector(
             {"SsAgent": lambda m: len(m.agents_by_type[SsAgent])}
         )
+        self.steps = 0
 
         # Create sugar
         import numpy as np
 
         sugar_distribution = np.genfromtxt(Path(__file__).parent / "sugar-map.txt")
+        sugar_id = 1
         for _, (x, y) in self.grid.coord_iter():
             max_sugar = sugar_distribution[x, y]
-            sugar = Sugar(self, max_sugar)
+            sugar = Sugar(sugar_id, self, max_sugar)
             self.grid.place_agent(sugar, (x, y))
+            sugar_id += 1
 
         # Create agent:
+        agent_id = 1
         for i in range(self.initial_population):
             x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
             sugar = self.random.randrange(6, 25)
             metabolism = self.random.randrange(2, 4)
             vision = self.random.randrange(1, 6)
-            ssa = SsAgent(self, False, sugar, metabolism, vision)
+            ssa = SsAgent(agent_id, self, False, sugar, metabolism, vision)
             self.grid.place_agent(ssa, (x, y))
+            agent_id += 1
 
         self.running = True
         self.datacollector.collect(self)
@@ -72,6 +77,7 @@ class SugarscapeCg(mesa.Model):
         self.datacollector.collect(self)
         if self.verbose:
             print(f"Step: {self.steps}, SsAgents: {len(self.agents_by_type[SsAgent])}")
+        self.steps += 1
 
     def run_model(self, step_count=200):
         if self.verbose:
