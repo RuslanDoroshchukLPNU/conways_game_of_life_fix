@@ -7,11 +7,11 @@ class Cell(mesa.Agent):
     DEAD = 0
     ALIVE = 1
 
-    def __init__(self, pos, model, init_state=DEAD):
+    def __init__(self, unique_id, pos, model, init_state=DEAD):
         """
         Create a cell, in the given state, at the given x, y position.
         """
-        super().__init__(model)
+        super().__init__(unique_id, model)
         self.x, self.y = pos
         self.state = init_state
         self._nextState = None
